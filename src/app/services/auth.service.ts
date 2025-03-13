@@ -20,7 +20,7 @@ export class AuthService {
     const data = { user: usuario, pass: contrasena };
     return this.http.post(`${this.apiUrl}/register`, data);
   } 
-
+ //olis
   // Método para programar el riego
   programarRiego(abrir: string, cerrar: string, dias: string[]): Observable<any> {
     const data = { abrir, cerrar, dias };
