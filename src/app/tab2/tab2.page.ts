@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service'; // Importa el servicio
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonDatetime, IonGrid, 
-  IonRow, IonCol, IonDatetimeButton, IonModal
+  IonRow, IonCol, IonDatetimeButton, IonModal, IonButton
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';  // Importa FormsModule
 
@@ -24,7 +24,10 @@ import { FormsModule } from '@angular/forms';  // Importa FormsModule
     IonRow,
     IonCol,
     FormsModule, 
-    IonDatetime
+    IonDatetime,
+    IonButton,
+    IonDatetimeButton,
+    IonModal
   ]
 })
 export class Tab2Page {

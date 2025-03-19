@@ -10,11 +10,16 @@ ion-content {
   justify-content: center;
   align-items: center;
   height: 100vh; // Centra todo el contenido verticalmente
+  padding: 0 16px; // Agrega un poco de margen
 }
 
 ion-grid {
   width: 100%;
   max-width: 400px; // Evita que sea demasiado ancho
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; // Alinea los items al centro
 }
 
 ion-row {
@@ -30,6 +35,7 @@ ion-row {
   text-align: left; // Mantiene el texto alineado a la izquierda
   flex: 1; // Ocupará el espacio disponible antes del botón
   margin-right: 15px; // Agrega espacio entre el texto y el botón
+  text-align: center; // Centra el texto de los labels
 }
 
 .datetime-btn {
@@ -51,6 +57,7 @@ ion-datetime-button::part(native) {
   padding: 5px 20px;
 }
 
+/* Ajuste para los días de la semana */
 .dias-container {
   display: flex;
   justify-content: center;
@@ -109,16 +116,47 @@ ion-datetime-button::part(native) {
 
 /* Estilos para hacer el ion-datetime más pequeño */
 .compact-time {
-  width: auto;
-  max-height: 120px;
+  width: 100%; // Mantiene el 100% del contenedor
+  max-width: 200px; // Aumenta el max-width para hacerlo más ancho
   font-size: 14px;
   padding: 0;
-  border-radius: 10px
+  border-radius: 10px;
 }
 
-/* Estilos opcionales para el texto que muestra la hora */
+/* Ajuste para centrar el ion-datetime dentro de su contenedor */
+ion-col {
+  display: flex;
+  justify-content: center; // Centra el contenido en el ion-col
+  align-items: center;
+}
+
 ion-datetime {
   --padding-start: 0;
   --padding-end: 0;
+  width: 100%; // Asegura que el ion-datetime ocupe todo el espacio disponible
+  
+  /* Se enfocan en la hora y se ocultan los minutos y segundos */
+  --datetime-width: 100%;
+  --datetime-border-radius: 10px;
+  
+  /* Se elimina la parte de los minutos */
+  --minute-increment: 0;
+  --second-increment: 0;
+  --hour-increment: 1;
+
+  /* Se oculta el selector de fecha */
+  --day-increment: 0;
+  --month-increment: 0;
+  --year-increment: 0;
+
+  /* Estilo del campo de hora */
+  --datetime-color: black;
 }
 
+/* Estilo para el contenedor ion-datetime y el control de la hora */
+ion-datetime::part(native) {
+  max-width: 100%; /* Asegura que no se agrande más de lo que debe */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
