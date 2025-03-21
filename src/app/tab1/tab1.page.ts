@@ -12,7 +12,7 @@ import { UsersService } from '../services/users.service';
 
 export class Tab1Page {
   aspersores = [
-    { nombre: 'Aspersor 1', humedad: '60', temperatura: '25°C', encendido: false },
+    { nombre: 'Aspersor 1', humedad: '40', temperatura: '25°C', encendido: false },
   ];
   
   selectedIndex: number | null = 0; // Ahora permitimos valores null

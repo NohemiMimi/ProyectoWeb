@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service'; // Importa el servicio
@@ -30,7 +30,7 @@ import { FormsModule } from '@angular/forms';  // Importa FormsModule
     IonDatetime,
   ]
 })
-export class Tab2Page {
+export class Tab2Page implements OnInit, OnDestroy {
   dias = [
     { nombre: 'L', seleccionado: false },
     { nombre: 'M', seleccionado: false },
@@ -45,6 +45,8 @@ export class Tab2Page {
   cerrar: string = ''; // Hora de cierre
   humedad: number = 0; // Humedad del aspersor seleccionado
 
+  private humidityCheckInterval: any;  // Intervalo para la revisión continua de la humedad
+
   constructor(
     private navCtrl: NavController, 
     private authService: AuthService,
@@ -52,7 +54,14 @@ export class Tab2Page {
   ) {}
 
   ngOnInit() {
-    this.obtenerHumedad();
+    this.obtenerHumedad();  // Obtiene la humedad al inicio
+    this.startHumidityCheck();  // Comienza a revisar la humedad cada 5 segundos
+  }
+
+  ngOnDestroy() {
+    if (this.humidityCheckInterval) {
+      clearInterval(this.humidityCheckInterval);  // Detenemos la revisión continua al destruir el componente
+    }
   }
 
   obtenerHumedad() {
@@ -66,9 +75,22 @@ export class Tab2Page {
     );
   }
 
+  // Inicia la revisión continua de la humedad
+  startHumidityCheck() {
+    this.humidityCheckInterval = setInterval(() => {
+      this.obtenerHumedad();  // Vuelve a obtener la humedad cada 5 segundos
+    }, 5000);  // Revisa cada 5 segundos (5000ms)
+  }
+
   // Verifica si la humedad es alta (50% o más)
   isHighHumidity(): boolean {
     return this.humedad >= 50;
+  }
+
+  // Verifica si el formulario es válido (hora de apertura/cierre y días seleccionados)
+  isFormValid(): boolean {
+    const diasSeleccionados = this.dias.filter(dia => dia.seleccionado).length > 0;
+    return this.abrir !== '' && this.cerrar !== '' && diasSeleccionados;
   }
 
   toggleDia(index: number) {
