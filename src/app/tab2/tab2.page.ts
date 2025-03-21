@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service'; // Importa el servicio
+import { UsersService } from '../services/users.service';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonDatetime, IonGrid, 
-  IonRow, IonCol, IonDatetimeButton, IonModal, IonButton
+  IonRow, IonCol, IonButton
 } from '@ionic/angular/standalone';
 import { FormsModule } from '@angular/forms';  // Importa FormsModule
 
@@ -26,8 +27,7 @@ import { FormsModule } from '@angular/forms';  // Importa FormsModule
     FormsModule, 
     IonDatetime,
     IonButton,
-    IonDatetimeButton,
-    IonModal
+    IonDatetime,
   ]
 })
 export class Tab2Page {
@@ -43,31 +43,55 @@ export class Tab2Page {
 
   abrir: string = ''; // Hora de apertura
   cerrar: string = ''; // Hora de cierre
+  humedad: number = 0; // Humedad del aspersor seleccionado
 
-  constructor(private navCtrl: NavController, private authService: AuthService) {}
+  constructor(
+    private navCtrl: NavController, 
+    private authService: AuthService,
+    private usersService: UsersService
+  ) {}
 
-  // Función para manejar la selección de los días
+  ngOnInit() {
+    this.obtenerHumedad();
+  }
+
+  obtenerHumedad() {
+    this.usersService.getUsers().subscribe(
+      (data) => {
+        if (data.length > 0) {
+          this.humedad = parseFloat(data[0].humedad || '0'); // Tomamos la humedad del primer aspersor
+        }
+      },
+      (error) => console.error('Error al obtener humedad:', error)
+    );
+  }
+
+  // Verifica si la humedad es alta (50% o más)
+  isHighHumidity(): boolean {
+    return this.humedad >= 50;
+  }
+
   toggleDia(index: number) {
     this.dias[index].seleccionado = !this.dias[index].seleccionado;
   }
 
   guardarSeleccion() {
-    // Filtramos los días seleccionados
+    if (this.isHighHumidity()) {
+      console.log('No se puede programar el riego porque la humedad es demasiado alta.');
+      return;
+    }
+
     const diasSeleccionados = this.dias.filter(dia => dia.seleccionado).map(dia => dia.nombre);
-    
-    // Validamos que haya una hora de apertura, cierre y días seleccionados
+
     if (this.abrir && this.cerrar && diasSeleccionados.length > 0) {
-      console.log('Datos antes de enviar:', this.abrir, this.cerrar, diasSeleccionados); // Asegúrate de que los datos estén bien
-  
-      // Enviar los datos al backend a través del servicio
+      console.log('Datos antes de enviar:', this.abrir, this.cerrar, diasSeleccionados);
+
       this.authService.programarRiego(this.abrir, this.cerrar, diasSeleccionados).subscribe(
         (response) => {
-          // Si la llamada fue exitosa, mostramos un mensaje o redirigimos
           console.log('Riego programado exitosamente:', response);
-          this.navCtrl.navigateForward('/tabs/tab3');  // Redirige a otra página si lo deseas
+          this.navCtrl.navigateForward('/tabs/tab3');
         },
         (error) => {
-          // Si ocurrió un error, mostramos un mensaje
           console.error('Error al programar el riego:', error);
         }
       );
