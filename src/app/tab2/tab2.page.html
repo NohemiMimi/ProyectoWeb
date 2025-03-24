@@ -6,7 +6,13 @@
 
 <ion-content [fullscreen]="true">
   <br><br>
-  
+
+  <!-- Mostrar la humedad recibida de Tab1 -->
+  <ion-item>
+    <ion-label>Humedad actual:</ion-label>
+    <ion-text>{{ humedad || '--' }}%</ion-text> <!-- Muestra la humedad o '--' si no está disponible -->
+  </ion-item>
+
   <!-- Sección de programación de apertura -->
   <ion-grid>
     <ion-row class="ion-align-items-center">
@@ -14,7 +20,6 @@
         <p>Abrir:</p>
       </ion-col>
       <ion-col size="12" class="ion-text-center">
-        <!-- Usamos ion-datetime con [(ngModel)] para enlazar la hora seleccionada -->
         <ion-datetime [(ngModel)]="abrir" presentation="time" class="compact-time"></ion-datetime>
       </ion-col>
     </ion-row>
@@ -27,7 +32,6 @@
         <p>Cerrar:</p>
       </ion-col>
       <ion-col size="12" class="ion-text-left">
-        <!-- Usamos ion-datetime con [(ngModel)] para enlazar la hora seleccionada -->
         <ion-datetime [(ngModel)]="cerrar" presentation="time" class="compact-time"></ion-datetime>
       </ion-col>
     </ion-row>
@@ -56,6 +60,8 @@
 
   <!-- Botón de guardar -->
   <div class="ion-text-center ion-padding-top">
-    <button class="guardar" (click)="guardarSeleccion()"><p>Guardar</p></button>
+    <button class="guardar" (click)="guardarSeleccion()" [disabled]="isGuardadoDisabled">
+      <p>Guardar</p>
+    </button>
   </div>
 </ion-content>

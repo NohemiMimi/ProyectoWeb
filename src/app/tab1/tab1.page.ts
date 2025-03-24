@@ -1,68 +1,47 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonIcon, IonButton } from '@ionic/angular/standalone';
-import { CommonModule } from '@angular/common'; // Importamos CommonModule para usar *ngIf
-import { NavController } from '@ionic/angular'; // Importamos NavController
-import { UsersService } from '../services/users.service';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonItem, IonLabel, IonInput } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
+import { NavController } from '@ionic/angular';
+import { FormsModule } from '@angular/forms';
+import { NavigationExtras } from '@angular/router';
+
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton]
+  imports: [IonInput, IonLabel, IonItem, CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, FormsModule]
 })
-
 export class Tab1Page {
   aspersores = [
-    { nombre: 'Aspersor 1', humedad: '60', temperatura: '25°C', encendido: false },
+    { nombre: 'Aspersor 1', humedad: 0, encendido: true },
   ];
   
-  selectedIndex: number | null = 0; // Ahora permitimos valores null
+  selectedIndex: number | null = 0;
 
-  constructor(private navCtrl: NavController, private user:UsersService) {} // Inyectamos NavController
-  
-  
-  /** Selecciona un aspersor */
-  selectAspersor(index: number) {
-    this.selectedIndex = index;
-  }
-
-  /* agregarAspersor() {
-    this.aspersores.push({
-      nombre: "", // Se asignará después
-      humedad: "", // Convertir a string
-      temperatura: "", // Convertir a string
-      encendido: false
-    });
-  
-    this.reordenarAspersores(); // Se renumeran los nombres
-  }
-  
-  
-  eliminarAspersor() {
-    if (this.selectedIndex !== null) {
-      this.aspersores.splice(this.selectedIndex, 1); // Elimina el aspersor
-      this.selectedIndex = null;
-      this.reordenarAspersores(); // Renumera los nombres
-    }
-  }
-  
-  reordenarAspersores() {
-    this.aspersores.forEach((aspersor, index) => {
-      aspersor.nombre = `Aspersor ${index + 1}`;
-    });
-  } */
-  
-  
+  constructor(private navCtrl: NavController) {}
 
   /** Enciende o apaga el aspersor seleccionado */
   toggleAspersor() {
     if (this.selectedIndex !== null) {
       this.aspersores[this.selectedIndex].encendido = !this.aspersores[this.selectedIndex].encendido;
+      console.log(`Aspersor ${this.aspersores[this.selectedIndex].encendido ? 'encendido' : 'apagado'}`);
     }
   }
 
-
-  /** Navega a Tab 2 */
+  /** Navega a Tab 2 enviando la humedad */
   irATab2() {
-    this.navCtrl.navigateForward('/tabs/tab2');
-  }
+    if (this.selectedIndex !== null) {
+      let humedad = Number(this.aspersores[this.selectedIndex].humedad);
+      
+      if (isNaN(humedad) || humedad < 0) {
+        console.warn('Humedad inválida, ajuste el valor.');
+        return;
+      }
+
+      let navigationExtras: NavigationExtras = {
+        queryParams: { humedad }
+      };
+      this.navCtrl.navigateForward('/tabs/tab2', navigationExtras);
+    }
+  }  
 }

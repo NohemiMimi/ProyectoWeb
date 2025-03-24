@@ -27,4 +27,9 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/programar_riego`, data);
   }
   
+  // Método para cambiar el estado de la válvula
+  controlValvula(estado: boolean): Observable<any> {
+  return this.http.post(`${this.apiUrl}/control-valvula`, { estado });
+  }
+  
 }

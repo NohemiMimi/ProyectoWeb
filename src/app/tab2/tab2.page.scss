@@ -9,33 +9,33 @@ ion-content {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; // Centra todo el contenido verticalmente
-  padding: 0 16px; // Agrega un poco de margen
+  height: 100vh; /* Centra todo el contenido verticalmente */
+  padding: 0 16px; /* Agrega un poco de margen */
 }
 
 ion-grid {
   width: 100%;
-  max-width: 400px; // Evita que sea demasiado ancho
+  max-width: 400px; /* Evita que sea demasiado ancho */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; // Alinea los items al centro
+  align-items: center; /* Alinea los items al centro */
 }
 
 ion-row {
   display: flex;
-  align-items: center; // Alinea los elementos en la misma fila
-  justify-content: flex-start; // Mantiene el texto alineado a la izquierda
-  margin-bottom: 15px; // Espacio entre filas
+  align-items: center; /* Alinea los elementos en la misma fila */
+  justify-content: flex-start; /* Mantiene el texto alineado a la izquierda */
+  margin-bottom: 15px; /* Espacio entre filas */
 }
 
 .aspersor,
 .riego {
   font-size: 20px;
-  text-align: left; // Mantiene el texto alineado a la izquierda
-  flex: 1; // Ocupará el espacio disponible antes del botón
-  margin-right: 15px; // Agrega espacio entre el texto y el botón
-  text-align: center; // Centra el texto de los labels
+  text-align: left; /* Mantiene el texto alineado a la izquierda */
+  flex: 1; /* Ocupa el espacio disponible antes del botón */
+  margin-right: 15px; /* Agrega espacio entre el texto y el botón */
+  text-align: center; /* Centra el texto de los labels */
 }
 
 .datetime-btn {
@@ -46,13 +46,13 @@ ion-row {
   width: auto;
   min-width: 120px;
   text-align: center;
-  flex-shrink: 0; // Evita que el botón se reduzca demasiado
+  flex-shrink: 0; /* Evita que el botón se reduzca demasiado */
 }
 
 /* Estilo para los botones de ion-datetime */
 ion-datetime-button::part(native) {
-  background-color: white !important; /* Asegura que el botón sea completamente blanco */
-  color: black !important; /* Asegura que el texto del botón sea negro */
+  background-color: white !important;
+  color: black !important;
   border-radius: 5px;
   padding: 5px 20px;
 }
@@ -83,80 +83,58 @@ ion-datetime-button::part(native) {
   font-weight: bold;
 }
 
+/* Botón de guardar */
 .guardar {
-  background-color: #4CAF50;
+  background-color: #4CAF50; /* Color verde cuando el botón está habilitado */
   color: white;
   border-radius: 5px;
   padding: 0px 90px;
   font-size: 15px;
   display: block;
-  margin: 20px auto; // Centra el botón en la pantalla
+  margin: 20px auto; /* Centra el botón en la pantalla */
 }
 
+/* Botón deshabilitado cuando la humedad es alta */
+.guardar:disabled {
+  background-color: #BDBDBD; /* Color gris cuando el botón está deshabilitado */
+  cursor: not-allowed;
+}
+
+/* Mantener el color gris cuando el botón está deshabilitado y se pasa el mouse sobre él */
+.guardar:disabled:hover {
+  background-color: #BDBDBD; /* No cambia el color cuando se pasa el mouse sobre el botón deshabilitado */
+}
+
+/* Cambia el color cuando se pasa el mouse sobre el botón habilitado */
 .guardar:hover {
-  background-color: #388E3C;
+  background-color: #388E3C; /* Color verde más oscuro cuando se pasa el mouse */
 }
 
-/* Ajustes para pantallas pequeñas */
-@media (max-width: 480px) {
-  ion-grid {
-    max-width: 90%; // Reduce el ancho en pantallas pequeñas
-  }
-
-  .datetime-btn {
-    min-width: 100px;
-    padding: 8px;
-  }
-
-  .aspersor,
-  .riego {
-    font-size: 16px; // Reduce el tamaño del texto
-  }
-}
-
-/* Estilos para hacer el ion-datetime más pequeño */
-.compact-time {
-  width: 100%; // Mantiene el 100% del contenedor
-  max-width: 200px; // Aumenta el max-width para hacerlo más ancho
+/* Estilo para las notificaciones personalizadas */
+.notification {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
   font-size: 14px;
-  padding: 0;
-  border-radius: 10px;
+  max-width: 90%;
+  text-align: center;
+  z-index: 9999;
+  opacity: 0;
 }
 
-/* Ajuste para centrar el ion-datetime dentro de su contenedor */
-ion-col {
-  display: flex;
-  justify-content: center; // Centra el contenido en el ion-col
-  align-items: center;
+.notification.success {
+  background-color: green;
 }
 
-ion-datetime {
-  --padding-start: 0;
-  --padding-end: 0;
-  width: 100%; // Asegura que el ion-datetime ocupe todo el espacio disponible
-  
-  /* Se enfocan en la hora y se ocultan los minutos y segundos */
-  --datetime-width: 100%;
-  --datetime-border-radius: 10px;
-  
-  /* Se elimina la parte de los minutos */
-  --minute-increment: 0;
-  --second-increment: 0;
-  --hour-increment: 1;
-
-  /* Se oculta el selector de fecha */
-  --day-increment: 0;
-  --month-increment: 0;
-  --year-increment: 0;
-
-  /* Estilo del campo de hora */
-  --datetime-color: black;
+.notification.danger {
+  background-color: red;
 }
 
-/* Estilo para el contenedor ion-datetime y el control de la hora */
-ion-datetime::part(native) {
-  max-width: 100%; /* Asegura que no se agrande más de lo que debe */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.notification.warning {
+  background-color: orange;
 }
