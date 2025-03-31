@@ -138,3 +138,10 @@ ion-datetime-button::part(native) {
 .notification.warning {
   background-color: orange;
 }
+
+.label{
+  width: 50%;
+  border-radius: 5px;
+  text-align: center;
+  margin: 0 auto;
+}

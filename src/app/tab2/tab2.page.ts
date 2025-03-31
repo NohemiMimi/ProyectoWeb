@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'; 
 import { CommonModule } from '@angular/common';
 import { NavController, AlertController } from '@ionic/angular';
-import { AuthService } from '../services/auth.service'; 
+import { AuthService } from '../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, IonDatetime, IonGrid, 
@@ -16,7 +15,7 @@ import {
   imports: [ 
     CommonModule, FormsModule, 
     IonHeader, IonToolbar, IonTitle, IonContent, 
-    IonGrid, IonRow, IonCol, IonDatetime, IonText, 
+    IonGrid, IonRow, IonCol, IonDatetime,
     IonItem, IonLabel
   ]
 })
@@ -32,27 +31,23 @@ export class Tab2Page implements OnInit, OnDestroy {
   ];
 
   abrir: string = '08:00';
-  cerrar: string = '18:00';
-  humedad: string | null = null;
-  isGuardadoDisabled: boolean = false; 
+  cerrar: string = '08:00';
+  humedad: number | null = null;
+  isGuardadoDisabled: boolean = false;
   humedadInterval: any;
 
   constructor(
     private alertController: AlertController,
     private navCtrl: NavController,
-    private authService: AuthService,
-    private route: ActivatedRoute
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      this.humedad = params['humedad'];
-      console.log('Humedad recibida:', this.humedad);
-      this.checkHumedad(); 
-    });
+    this.obtenerHumedad(); // Obtener humedad al cargar la página
 
+    // Intervalo para actualizar la humedad cada 5 segundos
     this.humedadInterval = setInterval(() => {
-      this.checkHumedad();
+      this.obtenerHumedad();
     }, 5000);
   }
 
@@ -62,32 +57,48 @@ export class Tab2Page implements OnInit, OnDestroy {
     }
   }
 
+  /** Obtiene la humedad desde la API */
+  obtenerHumedad() {
+    this.authService.getHumedad().subscribe(
+      response => {
+        this.humedad = response.humedad;
+        console.log('Humedad obtenida en Tab2:', this.humedad);
+        this.checkHumedad();
+      },
+      error => {
+        console.error('Error obteniendo la humedad en Tab2:', error);
+      }
+    );
+  }
+
+  /** Verifica si la humedad es alta para deshabilitar la programación de riego */
   checkHumedad() {
     if (this.humedad !== null) {
-      const humedadValue = parseFloat(this.humedad);
-      console.log('Humedad actual:', humedadValue);
+      console.log('Humedad actual:', this.humedad);
   
-      if (humedadValue >= 50 && !this.isGuardadoDisabled) {
+      if (this.humedad >= 50 && !this.isGuardadoDisabled) {
         this.isGuardadoDisabled = true;
         this.mostrarNotificacion('La humedad es alta. No es necesario programar el riego.', 'danger');
-      } else if (humedadValue < 50 && this.isGuardadoDisabled) {
+      } else if (this.humedad < 50 && this.isGuardadoDisabled) {
         this.isGuardadoDisabled = false;
         this.mostrarNotificacion('La humedad ha bajado. Ahora puedes programar el riego.', 'success');
       }
     }
   }
 
+  /** Alterna la selección de días de la semana */
   toggleDia(index: number) {
     this.dias[index].seleccionado = !this.dias[index].seleccionado;
   }
 
+  /** Guarda la programación del riego */
   async guardarSeleccion() {
-    if (this.humedad !== null && parseFloat(this.humedad) >= 50) {
-      this.isGuardadoDisabled = true; 
+    if (this.humedad !== null && this.humedad >= 50) {
+      this.isGuardadoDisabled = true;
       await this.mostrarNotificacion('La humedad es alta. No es necesario programar el riego.', 'danger');
       return;
     } else {
-      this.isGuardadoDisabled = false; 
+      this.isGuardadoDisabled = false;
     }
 
     const diasSeleccionados = this.dias.filter(dia => dia.seleccionado).map(dia => dia.nombre);
@@ -100,13 +111,14 @@ export class Tab2Page implements OnInit, OnDestroy {
     try {
       await this.authService.programarRiego(this.abrir, this.cerrar, diasSeleccionados).toPromise();
       await this.mostrarNotificacion('Riego programado exitosamente.', 'success');
-      this.navCtrl.navigateForward('/tabs/tab3');
+      this.navCtrl.navigateForward('/tabs/tab1');
     } catch (error) {
       console.error('Error al programar el riego:', error);
       await this.mostrarNotificacion('Ocurrió un error al programar el riego.', 'danger');
     }
   }
 
+  /** Muestra una notificación en pantalla */
   async mostrarNotificacion(message: string, tipo: string) {
     const alert = await this.alertController.create({
       header: tipo === 'success' ? 'Éxito' : tipo === 'danger' ? 'Error' : 'Advertencia',

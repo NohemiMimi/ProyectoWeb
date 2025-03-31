@@ -18,13 +18,13 @@
         <div class="aspersor-card">
           <h3>{{ aspersor.nombre }}</h3>
           <p><strong>Humedad:</strong> {{ aspersor.humedad }}%</p>
-          <p><strong>Programado:</strong> {{ aspersor.abrir }} - {{ aspersor.cerrar }}</p>
+          <p><strong>Abrir:</strong> {{ aspersor.abrir }}</p>
+          <p><strong>Cerrar:</strong> {{ aspersor.cerrar }}</p>
           <p><strong>Días:</strong> {{ aspersor.dias.join(', ') || 'No programado' }}</p>
-          <ion-button color="{{ aspersor.encendido ? 'danger' : 'success' }}" (click)="toggleAspersor(i)">
-            {{ aspersor.encendido ? 'Apagar' : 'Encender' }}
-          </ion-button>
+          <p><strong>Aspersor:</strong> {{ aspersor.encendido}}</p>
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
+div

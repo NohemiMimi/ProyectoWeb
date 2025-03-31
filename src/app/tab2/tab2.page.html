@@ -7,10 +7,9 @@
 <ion-content [fullscreen]="true">
   <br><br>
 
-  <!-- Mostrar la humedad recibida de Tab1 -->
-  <ion-item>
-    <ion-label>Humedad actual:</ion-label>
-    <ion-text>{{ humedad || '--' }}%</ion-text> <!-- Muestra la humedad o '--' si no está disponible -->
+  <!-- Mostrar la humedad recibida -->
+  <ion-item class="label">
+    <ion-label>Humedad actual: {{ humedad !== null ? humedad + '%' : '--' }}</ion-label>
   </ion-item>
 
   <!-- Sección de programación de apertura -->

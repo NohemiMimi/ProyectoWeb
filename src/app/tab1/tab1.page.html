@@ -18,9 +18,8 @@
       <br><br>
 
       <div class="data-container">
-        <ion-item>
-          <ion-label position="floating">Humedad (%)</ion-label>
-          <ion-input type="number" [(ngModel)]="aspersores[selectedIndex].humedad" min="0"></ion-input>
+        <ion-item class="label">
+          <ion-label>Humedad: {{ aspersores[selectedIndex].humedad }}%</ion-label>
         </ion-item>
       </div>
 
@@ -45,5 +44,3 @@
     </div>
   </div>
 </ion-content>
-
-

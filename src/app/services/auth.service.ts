@@ -31,5 +31,21 @@ export class AuthService {
   controlValvula(estado: boolean): Observable<any> {
   return this.http.post(`${this.apiUrl}/control-valvula`, { estado });
   }
+
+   // Obtener la humedad del aspersor
+   getHumedad(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/humedad`);
+  }
+
+  // Obtener la programación de riego
+  getProgramacionRiego(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/programar_riego`);
+  }
+
+  // Obtener el estado de la válvula
+  getEstadoValvula(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/GetValvula`);
+  }
+  
   
 }
