@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://api-l3zi.onrender.com';  // Cambia esto si tienes otra URL
+  private apiUrl = 'https://api-l3zi.onrender.com';
 
   constructor(private http: HttpClient) {}
 
@@ -47,5 +47,15 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/GetValvula`);
   }
   
-  
+  getUltimaProgramacionRiego(): Observable<any> {
+    return this.http.get<any[]>(`${this.apiUrl}/programacion_riego`).pipe(
+      map(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          return data[data.length - 1];  // Devuelve el último registro
+        }
+        return null;  // Si no hay datos, devuelve null
+      })
+    );
+  }
+
 }
